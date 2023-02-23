@@ -1,0 +1,17 @@
+{
+  "name": "generador_qr_nutramerican",
+  "version": "1.0.0",
+  "description": "Generador de qr",
+  "main": "QR.js",
+  "scripts": {
+    "start": "node QR.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fetch": "^1.1.0",
+    "node-fetch": "^2.6.1",
+    "qrcode": "^1.4.4"
+  }
+}
