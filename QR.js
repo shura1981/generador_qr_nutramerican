@@ -56,8 +56,8 @@ const build = (index, prefijo, producto) => {
     // MakeDir(dir);
     // qr.toFile(dir + literal + '.png', url, { errorCorrectionLevel: 'H' });
     //#endregion
-    return query;
-    // return url;
+    // return query;
+    return url;
 }
 const run = async ({ totalQr, start }) => {
     var querys = "";
@@ -67,10 +67,10 @@ const run = async ({ totalQr, start }) => {
         const q = build(index, prefijo, producto);
         querys += q + '\n';
     }
-    fs.writeFileSync(`scripts/${prefijo}.sql`, `${querys}`);
-    // fs.writeFileSync(`${prefijo}.txt`, `${querys}`);
+    // fs.writeFileSync(`scripts/${prefijo}.sql`, `${querys}`);
+    fs.writeFileSync(`${prefijo}.txt`, `${querys}`);
     console.log("Finalizado...");
 }
 
 
-run({start:140532, totalQr:10000});
+run({start:150532, totalQr:40000});
