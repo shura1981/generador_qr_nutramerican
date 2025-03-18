@@ -1,5 +1,7 @@
 const qr = require('qrcode');
 const fs = require('fs');
+// const dominio = 'https://www.sorteo.megaplexstars.com/';
+const dominio = 'https://inscripcionreto.nutramerican.com/';
 const prefijos = {
     BIPROVAINILLA2L: 'BV2L',
     BIPROCHOCOLATE2L: 'BC2L',
@@ -33,7 +35,15 @@ const prefijos = {
     POWERSTACK: 'POWER',
     PROTEINCAKET: 'PANCAKET',
     PROTEINCAKEW: 'PANCAKEW',
-    ZOLE: 'ZOLE'
+    ZOLE: 'ZOLE',
+    PROTEIN_CHOCOLATE: 'PROTEINCH'
+}
+const productos = {
+    PROTEIN_CHOCOLATE: 'PROTEIN CHOCOLATE'
+}
+const mode = {
+    QUERY: 'QUERY',
+    URL: 'URL'
 }
 const MakeDir = async (dir) => {
     try {
@@ -45,32 +55,37 @@ const MakeDir = async (dir) => {
         }
     }
 }
-const build = (index, prefijo, producto) => {
+const build = (index, prefijo, producto, opt = mode.QUERY) => {
     const literal = prefijo + index;
     const queryparam = Buffer.from(literal, 'utf-8');
     const base64 = queryparam.toString('base64');
-    const url = `https://www.sorteo.megaplexstars.com/?qr=${base64}`;
+    const url = `${dominio}?qr=${base64}`;
     const query = `INSERT INTO tb_qrs SET id_recibo='${literal}', producto='${producto}';`
     //#region Generar los qr
     // const dir = `${prefijo}/`;
     // MakeDir(dir);
     // qr.toFile(dir + literal + '.png', url, { errorCorrectionLevel: 'H' });
     //#endregion
-    // return query;
-    return url;
+    return opt == mode.QUERY ? query : url;
 }
-const run = async ({ totalQr, start }) => {
+const run = async ({ totalQr, start, opt = mode.QUERY }) => {
     var querys = "";
     const prefijo = prefijos.BURNERSTACK;
     const producto = 'BURNER STACK';
+    // const prefijo = prefijos.PROTEIN_CHOCOLATE;
+    // const producto = productos.PROTEIN_CHOCOLATE;
+
     for (let index = start; index <= (totalQr + start); index++) {
-        const q = build(index, prefijo, producto);
+        const q = build(index, prefijo, producto, opt);
         querys += q + '\n';
     }
-    // fs.writeFileSync(`scripts/${prefijo}.sql`, `${querys}`);
-    fs.writeFileSync(`${prefijo}.txt`, `${querys}`);
+
+    if (opt == mode.QUERY) {
+        fs.writeFileSync(`scripts/${prefijo}.sql`, `${querys}`);
+    } else {
+        fs.writeFileSync(`${prefijo}.txt`, `${querys}`);
+    }
     console.log("Finalizado...");
 }
-
-
-run({start:150532, totalQr:40000});
+run({ start: 243545, totalQr: 3000, opt: mode.QUERY });
+// run({ start: 1, totalQr: 55000, opt: mode.URL });
